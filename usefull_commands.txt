@@ -1,0 +1,15 @@
+#enable Scripts
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+
+
+#activate an environment
+.\venv\Scripts\activate
+
+#set the api url
+$env:PREFECT_API_URL = "http://127.0.0.1:4200/api"
+
+#starts a worker
+prefect worker start --pool default-agent-pool
+
+#creates a deployment
+prefect deploy flows/neo4j_loader.py:neo4j_loader_flow -n "aura-data-loader" --pool "default-agent-pool"
