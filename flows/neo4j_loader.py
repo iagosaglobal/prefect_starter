@@ -13,5 +13,5 @@ def load_data_to_neo4j():
         session.run("CREATE (p:Person {name: 'Prefect'})")
 
 @flow
-def neo4j_loader_flow():
+def neo4j_flow():
     load_data_to_neo4j()
