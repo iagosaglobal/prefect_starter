@@ -59,9 +59,7 @@ async def create_work_pool():
 def start_prefect_server():
     print("🚀 Starting Prefect server...")
     subprocess.Popen(
-        ["prefect", "server", "start", "--host", "0.0.0.0"],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL
+        ["prefect", "server", "start", "--host", "0.0.0.0"]
     )
     time.sleep(5)
 

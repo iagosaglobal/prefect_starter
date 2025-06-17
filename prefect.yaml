@@ -1,5 +1,5 @@
 name: neo4j-flows
-prefect-version: 2.20.19
+prefect-version: 2.14
 
 deployments:
   - name: neo4j-loader
