@@ -56,6 +56,15 @@ async def create_work_pool():
         else:
             print("ℹ️ Work pool 'client-pool' already exists.")
 
+def start_prefect_server():
+    print("🚀 Starting Prefect server...")
+    subprocess.Popen(
+        ["prefect", "server", "start", "--host", "0.0.0.0"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL
+    )
+    time.sleep(5)
+
 def deploy_flows():
     print("🚀 Deploying flows...")
     subprocess.run(["prefect", "deploy"], check=True)
@@ -65,6 +74,7 @@ def start_worker():
     subprocess.Popen(["prefect", "worker", "start", "--pool", "client-pool"])
 
 async def main():
+    start_prefect_server()
     wait_for_server("http://127.0.0.1:4200/api/health")
     await create_blocks()
     await create_work_pool()
