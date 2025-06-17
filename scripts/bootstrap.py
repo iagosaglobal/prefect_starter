@@ -1,12 +1,28 @@
 import os
 import subprocess
 import asyncio
+import time
+import httpx
 from prefect.blocks.system import Secret
 from prefect.client.orchestration import get_client
 from prefect.client.schemas.actions import WorkPoolCreate
 
 # Set Prefect API URL
 os.environ["PREFECT_API_URL"] = "http://127.0.0.1:4200/api"
+
+def wait_for_server(url, timeout=60):
+    print(f"⏳ Waiting for Prefect server at {url}...")
+    start = time.time()
+    while time.time() - start < timeout:
+        try:
+            r = httpx.get(url)
+            if r.status_code == 200:
+                print("✅ Prefect server is up.")
+                return
+        except Exception:
+            pass
+        time.sleep(2)
+    raise Exception("❌ Prefect server not responding in time.")
 
 async def create_blocks():
     print("🔧 Creating blocks...")
@@ -49,6 +65,7 @@ def start_worker():
     subprocess.Popen(["prefect", "worker", "start", "--pool", "client-pool"])
 
 async def main():
+    wait_for_server("http://127.0.0.1:4200/api/health")
     await create_blocks()
     await create_work_pool()
     deploy_flows()
